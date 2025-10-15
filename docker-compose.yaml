@@ -6,64 +6,55 @@
 
 #To launch this app without having to clone the entire repository,use the docker-compose.yaml file to run the app
 
-version: "3.8"
+#version: "3.9"
 
 services:
-
-  #Builds the frontend Docker image and creates the frontend microservice
-  brian-yolo-client:
-    image: brianbwire/brian-yolo-client:v1.0.0
-    build: ./client
-    container_name: brian-yolo-client
-    stdin_open: true
-    tty: true
-    ports:
-      - "3000:3000"
-    depends_on: 
-      - brian-yolo-backend
-    networks:
-      - app-net
-
-  #Builds the backend Docker image and creates the backend microservice
-  brian-yolo-backend:
-    image: brianbwire/brian-yolo-backend:v1.0.0
-    build: ./backend
-    container_name: brian-yolo-backend
-    stdin_open: true
-    tty: true
+  mongo:
+    image: mongo:5.0
+    container_name: mongo-db
     restart: always
     ports:
-      - "5000:5000"
-    depends_on: 
-      - app-ip-mongo
-    networks:
-      - app-net
-
-  #Creates the database microservice
-  app-ip-mongo:
-    image: mongo
-    container_name: app-mongo
-    ports:
       - "27017:27017"
-    networks:
-      - app-net
     volumes:
-      - type: volume
-        source: app-mongo-data
-        target: /data/db
+      - mongo_data:/data/db
+    networks:
+      - yolonet
 
-#Creates the network infrastructure necessary for the containers to communicate with each other
-networks:
-  app-net:
-    name: app-net
-    driver: bridge
-    attachable: true
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16 
-          ip_range: 172.20.0.0/16 
+  backend:
+    build:
+      context: ./backend  
+      dockerfile: Dockerfile
+    image: yolo-backend:1.0.0
+    container_name: yolo-backend
+    restart: always
+    #env_file:
+     # - ./server/.env
+    environment:
+      - MONGO_URI=mongodb://mongo-db:27017/yolo
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+    networks:
+      - yolonet
 
-#Creates a Docker volume that persists all the data stored in the database
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: yolo-frontend:1.0.0
+    container_name: yolo-client
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - yolonet
+
 volumes:
-  app-mongo-data:
-    driver: local
+  mongo_data:
+
+networks:
+  yolonet:
+    driver: bridge
