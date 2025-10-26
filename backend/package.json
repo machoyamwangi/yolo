@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/machoyamwangi/yolo.git"
+    "url": "https://github.com/Vinge1718/yolo.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/machoyamwangi/yolo.git/issues"
+    "url": "https://github.com/Vinge1718/yolo.git/issues"
   },
-  "homepage": "hhttps://github.com/machoyamwangi/yolo#readme",
+  "homepage": "https://github.com/Vinge1718/yolo.#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^5.2.0",
