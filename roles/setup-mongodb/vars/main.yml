@@ -1,4 +1,4 @@
 ---
 mongo_container_name: app_mongo
-mongo_network: app-network
+mongo_network: yolonet
 mongo_volume: app-mongo-data

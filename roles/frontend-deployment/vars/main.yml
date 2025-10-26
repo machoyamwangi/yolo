@@ -1,0 +1,3 @@
+container_name: yolo-frontend
+network: yolonet
+volume: app-mongo-data/app
