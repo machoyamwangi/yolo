@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yolo-backend
+  template:
+    metadata:
+      labels:
+        app: yolo-backend
+    spec:
+      containers:
+        - name: yolo-backend
+          image: docker.io/machoyamwangi/yolo-backend:v1.0.1
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: "mongodb://mongo-service:27017/yolo"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "200m"    # Request 0.2 CPU cores
+              memory: "256Mi" # Request 256 MB memory
+            limits:
+              cpu: "500m"    # Limit to 0.5 CPU cores
+              memory: "512Mi" # Limit to 512 MB memory

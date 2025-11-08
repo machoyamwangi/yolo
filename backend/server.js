@@ -11,8 +11,9 @@ let mongodb_url = 'mongodb://localhost/';
 let dbName = 'yolomy';
 
 // define a url to connect to the database
-const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
-mongoose.connect(MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true  } )
+//const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/yolo';
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 let db = mongoose.connection;
 
 // Check Connection
@@ -31,8 +32,8 @@ const app = express()
 // Body parser middleware
 app.use(express.json())
 
-// 
-app.use(upload.array()); 
+// Only apply multer middleware to specific routes that handle file uploads
+// Remove the global usage of upload.array()
 
 // Cors 
 app.use(cors());
@@ -41,7 +42,7 @@ app.use(cors());
 app.use('/api/products', productRoute)
 
 // Define the PORT
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, ()=>{
     console.log(`Server listening on port ${PORT}`)
