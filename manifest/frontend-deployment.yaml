@@ -1,0 +1,38 @@
+# frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-frontend
+  template:
+    metadata:
+      labels:
+        app: yolo-frontend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: yolo-frontend
+        image: machoyamwangi/yolo-frontend:v1.0.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://yolo-backend:5000"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-frontend
+spec:
+  selector:
+    app: yolo-frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer

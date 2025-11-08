@@ -1,0 +1,39 @@
+# backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-backend
+  template:
+    metadata:
+      labels:
+        app: yolo-backend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: yolo-backend
+        image: machoyamwangi/yolo-backend:v1.0.1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017/yolo"
+       
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-backend
+spec:
+  selector:
+    app: yolo-backend
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP
